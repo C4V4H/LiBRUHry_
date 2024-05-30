@@ -1,0 +1,15 @@
+<resources>
+    <string name="app_name">LiBRUHry</string>
+    <string name="Home">Home</string>
+    <string name="Bell">Bell</string>
+    <string name="Message">Message</string>
+    <string name="Heart">Heart</string>
+    <string name="Person">Person</string>
+    <string name="Plus">Plus</string>
+    <string name="Calendar">Calendar</string>
+    <string name="Settings">Settings</string>
+    <string name="Laptop">Laptop</string>
+    <string name="Circle">Circle</string>
+    <string name="Drop">Drop</string>
+    <string name="Leaf">Leaf</string>
+</resources>
