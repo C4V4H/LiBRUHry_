@@ -46,6 +46,9 @@ import com.cava.libruhry.dataclass.Category
 import com.cava.libruhry.dataclass.Person
 import com.cava.libruhry.dataclass.PersonWithReadDates
 import com.cava.libruhry.dataclass.relationship.BookPersonCrossRef
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 import java.util.UUID
 import kotlin.random.Random
 
@@ -98,7 +101,12 @@ fun HomeView(
             NewBookView(
                 paddings = paddings,
                 onSubmit = { data ->
-                    bookAddEvent(data)
+                    println("PANTI")
+                    CoroutineScope(Dispatchers.IO).launch {
+                        println("PORRATI")
+                        bookAddEvent(data)
+                        println("NICOLA")
+                    }
                     navController.navigate("HOME")
                 },
             )

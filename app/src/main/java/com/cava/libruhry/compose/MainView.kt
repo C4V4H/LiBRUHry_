@@ -201,7 +201,13 @@ fun MainView(
                                 scannedBarcode?.let {
                                     Pages.NEW_BOOK.undoAction = Pages.SCANNER
                                     page = Pages.NEW_BOOK
-                                    NewBookView(barcodeValue = it)
+                                    NewBookView(
+                                        barcodeValue = it,
+                                        onSubmit = { data ->
+                                            onEvent(LiBRUHryEvent.SaveBook(data))
+                                            mainNavController.navigate("HOME")
+                                        }
+                                    )
                                 } ?: run {
                                     CameraScreen(cameraPermissionResultLauncher = cameraPermissionResultLauncher) { barcode ->
                                         scannedBarcode = barcode
@@ -330,7 +336,9 @@ fun MainView(
 
                         Button(onClick = {
                             CoroutineScope(Dispatchers.Main).launch {
-                                bookData = getBookData("9788878876682")
+                                bookData = getBookData("9788804736127")
+                                if(bookData != null)
+                                    onEvent(LiBRUHryEvent.SaveBook(bookData!!))
                             }
                         }) {
                             Text(text = "Read")

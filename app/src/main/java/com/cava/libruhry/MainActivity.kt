@@ -77,7 +77,7 @@ class MainActivity : ComponentActivity() {
                     contract = ActivityResultContracts.RequestPermission(),
                     onResult = { isGranted ->
                         viewModel.onPermissionResult(
-                            permission = android.Manifest.permission.CAMERA,
+                            permission = Manifest.permission.CAMERA,
                             isGranted = isGranted
                         )
                     }

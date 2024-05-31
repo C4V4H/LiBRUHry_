@@ -48,12 +48,11 @@ import java.util.Date
 
 
 @OptIn(ExperimentalMaterial3Api::class)
-@Preview(device = "spec:id=reference_phone,shape=Normal,width=411,height=891,unit=dp,dpi=420")
 @Composable
 fun NewBookView(
     paddings: PaddingValues = PaddingValues(0.dp),
     barcodeValue: String = "AAAAAAAAA",
-    onSubmit: (BookData) -> Unit = {},
+    onSubmit: (BookData) -> Unit,
 ) {
 
     //  if (!isValidText(barcodeValue)) return
@@ -109,9 +108,10 @@ fun NewBookView(
             item {
                 // @TODO add search bar
                 Text(text = barcodeValue)
-                Row (
-                    horizontalArrangement = Arrangement.Center, verticalAlignment = Alignment.CenterVertically
-                ){
+                Row(
+                    horizontalArrangement = Arrangement.Center,
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
                     AsyncImage(
                         model = book!!.book.imageThumbnail,
                         contentDescription = "",
@@ -123,7 +123,9 @@ fun NewBookView(
                             .clip(RoundedCornerShape(10.dp)),
                     )
                     Button(onClick = {
-                        onSubmit(book!!)
+                            println("aaaaaaaaaaaa")
+                            onSubmit(book!!)
+
                     }) {
                         Text(text = "Submit")
                     }
