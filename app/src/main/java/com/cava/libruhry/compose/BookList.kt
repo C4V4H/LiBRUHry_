@@ -44,6 +44,8 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
+import androidx.palette.graphics.Palette
+import androidx.palette.graphics.Palette.Swatch
 import coil.compose.AsyncImage
 import com.airbnb.lottie.compose.LottieAnimation
 import com.airbnb.lottie.compose.LottieCompositionSpec
@@ -51,6 +53,8 @@ import com.airbnb.lottie.compose.animateLottieCompositionAsState
 import com.airbnb.lottie.compose.rememberLottieComposition
 import com.cava.libruhry.R
 import com.cava.libruhry.dataclass.BookData
+import kotlin.math.pow
+import kotlin.math.sqrt
 
 @OptIn(ExperimentalMaterial3AdaptiveApi::class)
 @Composable
@@ -89,7 +93,7 @@ fun BookList(
 fun BookRow(item: BookData, onClick: () -> Unit, onLikeEvent: () -> Unit) {
     val context = LocalContext.current
     var bitmap by remember { mutableStateOf<Bitmap?>(null) }
-    val colorCover: Map<String, String>?
+    var palette: List<Swatch>? = null
     var brush by remember {
         mutableStateOf(Brush.linearGradient(listOf(Color.White, Color.Black)))
     }
@@ -111,14 +115,34 @@ fun BookRow(item: BookData, onClick: () -> Unit, onLikeEvent: () -> Unit) {
     }
 
     if (bitmap != null) {
-        colorCover = PaletteGenerator.extractColorsFromBitmap(bitmap)
-        brush = Brush.linearGradient(
-            colors = listOfNotNull(
-                Color(android.graphics.Color.parseColor(colorCover?.get("mutedSwatch"))),
+//        val colorCover: Map<String, String>?
+//        colorCover = PaletteGenerator.extractColorsFromBitmap(bitmap)
+        palette = PaletteGenerator.extractColorsFromBitmap(bitmap, true)?.swatches?.sortedByDescending { it.population }
+//        brush = Brush.linearGradient(
+//            colors = listOfNotNull(
+//                Color(android.graphics.Color.parseColor(colorCover?.get("mutedSwatch"))),
 //                Color(android.graphics.Color.parseColor(colorCover?.get("lightVibrant"))),
-                Color(android.graphics.Color.parseColor(colorCover?.get("vibrant"))),
+//                Color(android.graphics.Color.parseColor(colorCover?.get("vibrant"))),
 //                Color(android.graphics.Color.parseColor(colorCover?.get("darkVibrant"))),
-            )
+//            )
+//        )
+        val result = palette?.let { findMostPopulousDifferentColors(it, 100.0) }
+        brush = Brush.linearGradient(
+
+//            colors = palette?.map { swatch ->
+//                Color(swatch.rgb)
+//            } ?: listOf(MaterialTheme.colorScheme.secondaryContainer, MaterialTheme.colorScheme.secondaryContainer)
+
+            colors = listOfNotNull(
+                result?.first?.let { Color(it.rgb) },
+                result?.first?.let { Color(it.rgb) },
+                result?.second?.let { Color(it.rgb) },
+                )
+//            listOfNotNull(
+////                palette?.mutedSwatch?.let { Color(it.rgb) } ?: MaterialTheme.colorScheme.secondaryContainer,
+//                palette?.get(0)?.let { Color(it.rgb) },
+//                palette?.get(palette.size/2)?.let { Color(it.rgb) },
+//            )
         )
         item.brush = brush
     }
@@ -129,7 +153,7 @@ fun BookRow(item: BookData, onClick: () -> Unit, onLikeEvent: () -> Unit) {
         .padding(vertical = 6.dp, horizontal = 10.dp)
         .clip(RoundedCornerShape(10.dp))
         .then(
-            if (isLoadingImage) Modifier.background(MaterialTheme.colorScheme.secondaryContainer)
+            if (palette == null) Modifier.background(MaterialTheme.colorScheme.secondaryContainer)
             else Modifier.background(brush)
         )
     ) {
@@ -290,3 +314,28 @@ val context = LocalContext.current
                 }
             }
  */
+fun calculateColorDistance(swatch1: Swatch, swatch2: Swatch): Double {
+    val r1 = (swatch1.rgb shr 16) and 0xFF
+    val g1 = (swatch1.rgb shr 8) and 0xFF
+    val b1 = swatch1.rgb and 0xFF
+
+    val r2 = (swatch2.rgb shr 16) and 0xFF
+    val g2 = (swatch2.rgb shr 8) and 0xFF
+    val b2 = swatch2.rgb and 0xFF
+
+    return sqrt((r1 - r2).toDouble().pow(2.0) + (g1 - g2).toDouble().pow(2.0) + (b1 - b2).toDouble().pow(2.0))
+}
+
+//TODO if not too distance use last
+fun findMostPopulousDifferentColors(swatches: List<Swatch>, minDistance: Double): Pair<Swatch, Swatch>? {
+    val sortedSwatches = swatches.sortedByDescending { it.population }
+
+    for (i in sortedSwatches.indices) {
+        for (j in i + 1 until sortedSwatches.size) {
+            if (calculateColorDistance(sortedSwatches[i], sortedSwatches[j]) >= minDistance) {
+                return Pair(sortedSwatches[i], sortedSwatches[j])
+            }
+        }
+    }
+    return null
+}

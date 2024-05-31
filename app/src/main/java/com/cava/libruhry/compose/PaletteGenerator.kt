@@ -34,6 +34,12 @@ object PaletteGenerator {
                 "vibrant" to parseColorSwatch(
                     color = Palette.from(bitmap).generate().vibrantSwatch
                 ),
+                "vibrant" to parseColorSwatch(
+                    color = Palette.from(bitmap).generate().vibrantSwatch
+                ),
+                "vibrant" to parseColorSwatch(
+                    color = Palette.from(bitmap).generate().vibrantSwatch
+                ),
                 "darkVibrant" to parseColorSwatch(
                     color = Palette.from(bitmap).generate().darkVibrantSwatch
                 ),
@@ -56,6 +62,13 @@ object PaletteGenerator {
                     color = Palette.from(bitmap).generate().darkMutedSwatch
                 ),
             )
+        else
+            null
+    }
+
+    fun extractColorsFromBitmap(bitmap: Bitmap?, bool: Boolean): Palette? {
+        return if (bitmap != null)
+            Palette.from(bitmap).generate()
         else
             null
     }
