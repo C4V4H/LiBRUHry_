@@ -1,8 +1,10 @@
 [versions]
 accompanistSystemuicontroller = "0.34.0"
 agp = "8.4.1"
+capturable = "2.1.0"
 cloudy = "0.1.2"
 coil = "2.6.0"
+glassmorphicComposables = "0.0.4"
 kotlin = "1.9.23"
 coreKtx = "1.13.1"
 junit = "4.13.2"
@@ -42,8 +44,10 @@ androidx-palette = { module = "androidx.palette:palette", version.ref = "palette
 androidx-palette-ktx = { module = "androidx.palette:palette-ktx", version.ref = "palette" }
 androidx-room-compiler = { module = "androidx.room:room-compiler", version.ref = "roomKtx" }
 androidx-room-ktx = { module = "androidx.room:room-ktx", version.ref = "roomKtx" }
+capturable = { module = "dev.shreyaspatil:capturable", version.ref = "capturable" }
 cloudy = { module = "com.github.skydoves:cloudy", version.ref = "cloudy" }
 coil = { module = "io.coil-kt:coil", version.ref = "coil" }
+glassmorphic-composables = { module = "com.github.jakhongirmadaminov:glassmorphic-composables", version.ref = "glassmorphicComposables" }
 junit = { group = "junit", name = "junit", version.ref = "junit" }
 androidx-junit = { group = "androidx.test.ext", name = "junit", version.ref = "junitVersion" }
 androidx-espresso-core = { group = "androidx.test.espresso", name = "espresso-core", version.ref = "espressoCore" }

@@ -13,6 +13,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
@@ -40,7 +41,9 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.blur
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -58,6 +61,7 @@ import com.exyte.animatednavbar.AnimatedNavigationBar
 import com.exyte.animatednavbar.animation.balltrajectory.Parabolic
 import com.exyte.animatednavbar.animation.indendshape.Height
 import com.exyte.animatednavbar.items.wigglebutton.WiggleButton
+import com.skydoves.cloudy.Cloudy
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -89,7 +93,6 @@ fun MainView(
             Scaffold(
                 modifier = Modifier.fillMaxSize(),
                 topBar = {
-                    // this is 64.dp height :P
                     TopAppBar(
                         navigationIcon = {
                             if (page.undoAction != null) {
@@ -109,7 +112,8 @@ fun MainView(
                             Text(text = page.description)
                         },
                         modifier = Modifier
-                            .background(MaterialTheme.colorScheme.tertiary),
+                            .background(Color.Transparent.copy(alpha = 0.5f)),
+//                            .background(MaterialTheme.colorScheme.tertiary),
                         colors = TopAppBarDefaults.topAppBarColors(
                             containerColor = MaterialTheme.colorScheme.primaryContainer,
                             scrolledContainerColor = MaterialTheme.colorScheme.secondary,
@@ -250,7 +254,7 @@ fun MainView(
                     topBar = {
                         TopAppBar(
                             navigationIcon = {
-                                Box (
+                                Box(
                                     modifier = Modifier
                                         .fillMaxSize()
                                 ) {
