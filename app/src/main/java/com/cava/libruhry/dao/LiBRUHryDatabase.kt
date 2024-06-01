@@ -12,6 +12,7 @@ import com.cava.libruhry.dataclass.Person
 import com.cava.libruhry.dataclass.relationship.BookAuthorCrossRef
 import com.cava.libruhry.dataclass.relationship.BookCategoryCrossRef
 import com.cava.libruhry.dataclass.relationship.BookPersonCrossRef
+import java.nio.file.attribute.PosixFileAttributes
 
 @Database(
     entities = [
@@ -21,7 +22,7 @@ import com.cava.libruhry.dataclass.relationship.BookPersonCrossRef
         Person::class,
         BookAuthorCrossRef::class,
         BookCategoryCrossRef::class,
-        BookPersonCrossRef::class
+        BookPersonCrossRef::class,
     ],
     version = 1,
     exportSchema = false

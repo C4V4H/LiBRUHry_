@@ -20,4 +20,10 @@ interface BookPersonCrossRefDao {
     // Per ottenere tutti i libri di una persona con un determinato ID
     @Query("SELECT books.*, book_person_cross_ref.startDate, book_person_cross_ref.endDate FROM books JOIN book_person_cross_ref ON books.isbn = book_person_cross_ref.isbn JOIN people ON book_person_cross_ref.name = people.name WHERE people.name = :name")
     suspend fun getBooksWithReadDatesFromPersonName(name: String): List<BookWithReadDates>
+
+    @Query("DELETE FROM book_person_cross_ref WHERE isbn = :isbn")
+    suspend fun deleteFromIsbn(isbn: String)
+
+    @Query("DELETE FROM book_person_cross_ref WHERE name = :name")
+    suspend fun deleteFromName(name: String)
 }

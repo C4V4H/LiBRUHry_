@@ -19,4 +19,9 @@ interface BookCategoryCrossRefDao {
     @Query("SELECT books.* FROM books JOIN book_category_cross_ref ON books.isbn = book_category_cross_ref.isbn JOIN categories ON book_category_cross_ref.name = categories.name WHERE categories.name = :name")
     suspend fun getBooksFromCategoryName(name: String): List<Book>
 
+    @Query("DELETE FROM book_category_cross_ref WHERE isbn = :isbn")
+    suspend fun deleteFromIsbn(isbn: String)
+
+    @Query("DELETE FROM book_category_cross_ref WHERE name = :name")
+    suspend fun deleteFromName(name: String)
 }

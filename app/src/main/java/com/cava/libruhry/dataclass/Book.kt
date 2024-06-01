@@ -2,6 +2,8 @@ package com.cava.libruhry.dataclass
 
 import androidx.room.Embedded
 import androidx.room.Entity
+import androidx.room.ForeignKey
+import androidx.room.Index
 import androidx.room.Junction
 import androidx.room.PrimaryKey
 import androidx.room.Relation
@@ -10,7 +12,9 @@ import com.cava.libruhry.dataclass.relationship.BookAuthorCrossRef
 import com.cava.libruhry.dataclass.relationship.BookCategoryCrossRef
 import com.cava.libruhry.dataclass.relationship.BookPersonCrossRef
 
-@Entity(tableName = "books")
+@Entity(
+    tableName = "books",
+)
 data class Book(
     @PrimaryKey(autoGenerate = false)
     val isbn: String,
@@ -22,7 +26,7 @@ data class Book(
     val pages: Int? = null,
     val language: String = "",
     val description: String = "",
-    val imageThumbnail: String = "",
+    val imageThumbnail: String = ""
 )
 
 
@@ -61,4 +65,3 @@ data class BookWithReadDates(
     val startDate: Long,
     val endDate: Long
 )
-

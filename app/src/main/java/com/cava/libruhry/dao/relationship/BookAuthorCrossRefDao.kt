@@ -18,4 +18,10 @@ interface BookAuthorCrossRefDao {
 
     @Query("SELECT books.* FROM books JOIN book_author_cross_ref ON books.isbn = book_author_cross_ref.isbn JOIN authors ON book_author_cross_ref.name = authors.name WHERE authors.name = :name")
     suspend fun getBooksFromName(name: String): List<Book>
+
+    @Query("DELETE FROM book_author_cross_ref WHERE isbn = :isbn")
+    suspend fun deleteFromIsbn(isbn: String)
+
+    @Query("DELETE FROM book_author_cross_ref WHERE name = :name")
+    suspend fun deleteFromName(name: String)
 }

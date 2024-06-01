@@ -8,6 +8,7 @@ import androidx.compose.animation.core.spring
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
@@ -17,6 +18,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.Create
+import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material3.Button
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ExtendedFloatingActionButton
@@ -248,15 +250,36 @@ fun MainView(
                     topBar = {
                         TopAppBar(
                             navigationIcon = {
-                                IconButton(
-                                    onClick = {
-                                        navigator.navigateBack()
-                                    }
+                                Box (
+                                    modifier = Modifier
+                                        .fillMaxSize()
                                 ) {
-                                    Icon(
-                                        imageVector = Icons.Filled.ArrowBack,
-                                        contentDescription = null,
-                                    )
+                                    IconButton(
+                                        modifier = Modifier
+                                            .align(Alignment.CenterStart),
+                                        onClick = {
+                                            navigator.navigateBack()
+                                        }
+                                    ) {
+                                        Icon(
+                                            imageVector = Icons.Filled.ArrowBack,
+                                            contentDescription = null,
+                                        )
+                                    }
+
+                                    IconButton(
+                                        modifier = Modifier
+                                            .align(Alignment.CenterEnd),
+                                        onClick = {
+                                            navigator.navigateBack()
+                                            onEvent(LiBRUHryEvent.DeleteBook(item.book))
+                                        }
+                                    ) {
+                                        Icon(
+                                            imageVector = Icons.Filled.Delete,
+                                            contentDescription = null,
+                                        )
+                                    }
                                 }
                             },
                             title = {
@@ -329,25 +352,6 @@ fun MainView(
                                     )
                                 }
                         )
-
-
-                        val context = LocalContext.current
-                        var bookData by remember { mutableStateOf<BookData?>(null) }
-
-                        Button(onClick = {
-                            CoroutineScope(Dispatchers.Main).launch {
-                                bookData = getBookData("9788804736127")
-                                if(bookData != null)
-                                    onEvent(LiBRUHryEvent.SaveBook(bookData!!))
-                            }
-                        }) {
-                            Text(text = "Read")
-                        }
-
-                        // Puoi usare bookData per mostrare i dati del libro nella tua UI
-                        bookData?.let {
-                            Text(text = it.book.title)
-                        }
                     }
                 }
 

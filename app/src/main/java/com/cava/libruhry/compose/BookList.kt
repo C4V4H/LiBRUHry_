@@ -56,7 +56,6 @@ import com.cava.libruhry.dataclass.BookData
 import kotlin.math.pow
 import kotlin.math.sqrt
 
-@OptIn(ExperimentalMaterial3AdaptiveApi::class)
 @Composable
 fun BookList(
     books: List<BookData>,
@@ -67,7 +66,6 @@ fun BookList(
 
     LazyColumn(
         contentPadding = paddings, modifier = modifier.fillMaxSize(),
-        //  .padding(paddings),
         verticalArrangement = Arrangement.spacedBy(10.dp)
     ) {
         item {
@@ -91,80 +89,18 @@ fun BookList(
 
 @Composable
 fun BookRow(item: BookData, onClick: () -> Unit, onLikeEvent: () -> Unit) {
-    val context = LocalContext.current
-    var bitmap by remember { mutableStateOf<Bitmap?>(null) }
-    var palette: List<Swatch>? = null
-    var brush by remember {
-        mutableStateOf(Brush.linearGradient(listOf(Color.White, Color.Black)))
-    }
-
-    var isLoadingGradient by remember {
-        mutableStateOf(true)
-    }
-    var isLoadingImage by remember {
-        mutableStateOf(true)
-    }
-
-    LaunchedEffect(true) {
-        val resultBitmap = PaletteGenerator.convertImageUrlToBitmap(
-            item.book.imageThumbnail, context
-        )!!
-
-        bitmap = resultBitmap
-        isLoadingGradient = false
-    }
-
-    if (bitmap != null) {
-//        val colorCover: Map<String, String>?
-//        colorCover = PaletteGenerator.extractColorsFromBitmap(bitmap)
-        palette = PaletteGenerator.extractColorsFromBitmap(bitmap, true)?.swatches?.sortedByDescending { it.population }
-//        brush = Brush.linearGradient(
-//            colors = listOfNotNull(
-//                Color(android.graphics.Color.parseColor(colorCover?.get("mutedSwatch"))),
-//                Color(android.graphics.Color.parseColor(colorCover?.get("lightVibrant"))),
-//                Color(android.graphics.Color.parseColor(colorCover?.get("vibrant"))),
-//                Color(android.graphics.Color.parseColor(colorCover?.get("darkVibrant"))),
-//            )
-//        )
-        val result = palette?.let { findMostPopulousDifferentColors(it, 100.0) }
-        brush = Brush.linearGradient(
-
-//            colors = palette?.map { swatch ->
-//                Color(swatch.rgb)
-//            } ?: listOf(MaterialTheme.colorScheme.secondaryContainer, MaterialTheme.colorScheme.secondaryContainer)
-
-            colors = listOfNotNull(
-                result?.first?.let { Color(it.rgb) },
-                result?.first?.let { Color(it.rgb) },
-                result?.second?.let { Color(it.rgb) },
-                )
-//            listOfNotNull(
-////                palette?.mutedSwatch?.let { Color(it.rgb) } ?: MaterialTheme.colorScheme.secondaryContainer,
-//                palette?.get(0)?.let { Color(it.rgb) },
-//                palette?.get(palette.size/2)?.let { Color(it.rgb) },
-//            )
-        )
-        item.brush = brush
-    }
-
     Row(modifier = Modifier
         .bounceClick { onClick() }
         .fillMaxWidth()
         .padding(vertical = 6.dp, horizontal = 10.dp)
         .clip(RoundedCornerShape(10.dp))
-        .then(
-            if (palette == null) Modifier.background(MaterialTheme.colorScheme.secondaryContainer)
-            else Modifier.background(brush)
-        )
+        .background(brush = item.brush)
     ) {
         AsyncImage(
             model = item.book.imageThumbnail,
             contentDescription = "",
             placeholder = painterResource(id = R.drawable.thumbnail_placeholder),
             error = painterResource(id = R.drawable.thumbnail_placeholder),
-            onSuccess = {
-                isLoadingImage = false
-            },
             modifier = Modifier
                 .height(120.dp)
                 .padding(6.dp)
@@ -229,113 +165,38 @@ fun AnimatedHeart(
 }
 
 
-/*
-val context = LocalContext.current
-            val bitmap = remember {
-                BitmapFactory.decodeResource(context.resources, R.drawable.provaimmaginegradiente)
-            }
-            val palette = remember {
-                Palette.from(bitmap).generate()
-            }
-            val vibrantSwatch = palette.vibrantSwatch
-            val lightVibrantSwatch = palette.lightVibrantSwatch
-            val darkVibrantSwatch = palette.darkVibrantSwatch
-            val mutedSwatch = palette.mutedSwatch
-            val brush = Brush.linearGradient(
-                colors = listOfNotNull(
-                    vibrantSwatch?.let { Color(it.rgb) },
-                    lightVibrantSwatch?.let { Color(it.rgb) },
-                    mutedSwatch?.let { Color(it.rgb) },
-                    darkVibrantSwatch?.let { Color(it.rgb) },
-                )
-            )
-
-
-            Row(
-                modifier = Modifier
-                    .bounceClick {
-                        // @TODO navigate to detail
-                    }
-                    .fillMaxWidth()
-                    .padding(6.dp)
-                    .clip(RoundedCornerShape(10.dp))
-//                    .border(1.dp, Color.Black, RoundedCornerShape(10.dp))
-                    .background(brush = brush/*MaterialTheme.colorScheme.secondaryContainer*/)
-            ) {
-                AsyncImage(
-                    model = item.book.imageThumbnail,
-                    contentDescription = "",
-                    placeholder = painterResource(id = R.drawable.copertina_prova),
-                    error = painterResource(id = R.drawable.cool_image),
-                    onLoading = {
-                        println("LODING...")
-                    },
-                    onError = {
-                        println("ERROR: ${it.result.request.error}")
-                    },
-                    modifier = Modifier
-                        .height(120.dp)
-                        .padding(6.dp)
-                        .clip(RoundedCornerShape(10.dp)),
-                )
-
-                Column(
-                    modifier = Modifier
-                        .weight(1f)
-                        .padding(10.dp)
-                ) {
-                    Text(
-                        text = item.book.title,
-                        color = MaterialTheme.colorScheme.onSecondaryContainer,
-                        style = MaterialTheme.typography.titleLarge
-                    )
-                    Text(
-                        text = item.authors.joinToString(separator = ", ") { it.firstName + " " + it.lastName },
-                        color = MaterialTheme.colorScheme.onSecondaryContainer,
-                        style = MaterialTheme.typography.bodyMedium
-                    )
-                }
-
-                IconButton(
-                    onClick = { item.book.liked = !item.book.liked },
-                    modifier = Modifier
-                        .padding(10.dp)
-                        .clip(RoundedCornerShape(10.dp))
-                        .size(30.dp)
-                ) {
-                    Icon(
-                        modifier = Modifier
-                            .size(24.dp)
-                            .padding(2.dp),
-                        imageVector = if (!item.book.liked) Icons.Outlined.Favorite else Icons.Filled.Favorite,
-                        contentDescription = null,
-                        tint = MaterialTheme.colorScheme.tertiary//Container
-                    )
-                }
-            }
- */
-fun calculateColorDistance(swatch1: Swatch, swatch2: Swatch): Double {
-    val r1 = (swatch1.rgb shr 16) and 0xFF
-    val g1 = (swatch1.rgb shr 8) and 0xFF
-    val b1 = swatch1.rgb and 0xFF
-
-    val r2 = (swatch2.rgb shr 16) and 0xFF
-    val g2 = (swatch2.rgb shr 8) and 0xFF
-    val b2 = swatch2.rgb and 0xFF
-
-    return sqrt((r1 - r2).toDouble().pow(2.0) + (g1 - g2).toDouble().pow(2.0) + (b1 - b2).toDouble().pow(2.0))
-}
-
-//TODO if not too distance use last
-fun findMostPopulousDifferentColors(swatches: List<Swatch>, minDistance: Double): Pair<Swatch, Swatch>? {
-    val sortedSwatches = swatches.sortedByDescending { it.population }
-
-    for (i in sortedSwatches.indices) {
-        for (j in i + 1 until sortedSwatches.size) {
-            if (calculateColorDistance(sortedSwatches[i], sortedSwatches[j]) >= minDistance) {
-                return Pair(sortedSwatches[i], sortedSwatches[j])
-            }
-        }
-    }
-    return null
-}
+//    val context = LocalContext.current
+//    var bitmap by remember { mutableStateOf<Bitmap?>(null) }
+//    var palette: List<Swatch>? = null
+//    var brush by remember {
+//        mutableStateOf(Brush.linearGradient(listOf(Color.White, Color.Black)))
+//    }
+//
+//    var isLoadingGradient by remember {
+//        mutableStateOf(true)
+//    }
+//    var isLoadingImage by remember {
+//        mutableStateOf(true)
+//    }
+//
+//    LaunchedEffect(true) {
+//        val resultBitmap = PaletteGenerator.convertImageUrlToBitmap(
+//            item.book.imageThumbnail, context
+//        )!!
+//
+//        bitmap = resultBitmap
+//        isLoadingGradient = false
+//    }
+//
+//    if (bitmap != null) {
+//        palette = PaletteGenerator.extractColorsFromBitmap(bitmap, true)?.swatches?.sortedByDescending { it.population }
+//        val result = palette?.let { findMostPopulousDifferentColors(it, 100.0) }
+//        brush = Brush.linearGradient(
+//            colors = listOfNotNull(
+//                result?.first?.let { Color(it.rgb) },
+//                result?.first?.let { Color(it.rgb) },
+//                result?.second?.let { Color(it.rgb) },
+//                )
+//        )
+//        item.brush = brush
+//    }

@@ -8,4 +8,5 @@ data class LiBRUHryState (
     val sortType: SortType = SortType.TITLE,
     val isAddingContact: Boolean = false,
     val selectedBook: BookData? = null,
+    val areBooksLoading: Boolean = true,
 )

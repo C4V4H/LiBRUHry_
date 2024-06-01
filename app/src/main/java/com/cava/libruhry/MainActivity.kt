@@ -11,9 +11,15 @@ import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.compose.setContent
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
+import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
@@ -54,6 +60,7 @@ class MainActivity : ComponentActivity() {
             object : ViewModelProvider.Factory {
                 override fun <T : ViewModel> create(modelClass: Class<T>): T {
                     return LiBRUHryViewModel(
+                        application = application,
                         bookDao = db.bookDao(),
                         authorDao = db.authorDao(),
                         bookAuthorCrossRefDao = db.bookAuthorCrossRefDao(),
@@ -84,11 +91,25 @@ class MainActivity : ComponentActivity() {
                 )
 
                 val state by viewModel.state.collectAsState()
-                MainView(
-                    state = state,
-                    onEvent = viewModel::onEvent,
-                    cameraPermissionResultLauncher
-                )
+
+                if (!state.areBooksLoading) {
+                    MainView(
+                        state = state,
+                        onEvent = viewModel::onEvent,
+                        cameraPermissionResultLauncher
+                    )
+                } else {
+                    Box (
+                        modifier = Modifier
+                            .fillMaxSize()
+                            .background(MaterialTheme.colorScheme.background)
+                    ) {
+                        CircularProgressIndicator(
+                            modifier = Modifier.align(Alignment.Center),
+                            color = MaterialTheme.colorScheme.onBackground
+                        )
+                    }
+                }
 
                 dialogQueue
                     .reversed()
