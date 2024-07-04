@@ -330,6 +330,13 @@ fun MainView(
                         )
 
                         Text(
+                            text = item.book.subtitle,
+                            color = MaterialTheme.colorScheme.onSecondaryContainer,
+                            style = MaterialTheme.typography.titleLarge,
+                            modifier = Modifier.padding(20.dp)
+                        )
+
+                        Text(
                             text = item.authors.joinToString(separator = ", ") { it.name },
                             color = MaterialTheme.colorScheme.onSecondaryContainer,
                             style = MaterialTheme.typography.titleLarge,
@@ -355,6 +362,46 @@ fun MainView(
                                         content = item.categories
                                     )
                                 }
+                        )
+
+                        Text(
+                            text = item.book.isbn,
+                            color = MaterialTheme.colorScheme.onSecondaryContainer,
+                            style = MaterialTheme.typography.titleLarge,
+                            modifier = Modifier
+                                .padding(20.dp)
+                        )
+
+                        Text(
+                            text = item.book.description,
+                            color = MaterialTheme.colorScheme.onSecondaryContainer,
+                            style = MaterialTheme.typography.titleLarge,
+                            modifier = Modifier
+                                .padding(20.dp)
+                        )
+
+                        Text(
+                            text = item.book.language,
+                            color = MaterialTheme.colorScheme.onSecondaryContainer,
+                            style = MaterialTheme.typography.titleLarge,
+                            modifier = Modifier
+                                .padding(20.dp)
+                        )
+
+                        Text(
+                            text = item.book.publisher,
+                            color = MaterialTheme.colorScheme.onSecondaryContainer,
+                            style = MaterialTheme.typography.titleLarge,
+                            modifier = Modifier
+                                .padding(20.dp)
+                        )
+
+                        Text(
+                            text = "${item.book.pages} pages",
+                            color = MaterialTheme.colorScheme.onSecondaryContainer,
+                            style = MaterialTheme.typography.titleLarge,
+                            modifier = Modifier
+                                .padding(20.dp)
                         )
                     }
                 }
